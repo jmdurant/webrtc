@@ -160,6 +160,62 @@ class PeerConnectionIntegrationTestUnifiedPlan
       : PeerConnectionIntegrationBaseTest(SdpSemantics::kUnifiedPlan) {}
 };
 
+// Mode 0 is an ordinary-call control; 1 guards the sending peer and 2 guards
+// receivers created by the initial remote offer. Active-transport renegotiation
+// and actual cryptor/key behavior require additional tests.
+class PeerConnectionCreationTransformerMediaTest
+    : public PeerConnectionIntegrationBaseTest,
+      public WithParamInterface<int> {
+ protected:
+  PeerConnectionCreationTransformerMediaTest()
+      : PeerConnectionIntegrationBaseTest(SdpSemantics::kUnifiedPlan) {}
+};
+
+TEST_P(PeerConnectionCreationTransformerMediaTest, InitialMediaDropGuard) {
+  PeerConnectionInterface::RTCConfiguration config;
+  config.sdp_semantics = SdpSemantics::kUnifiedPlan;
+  PeerConnectionDependencies caller_dependencies(nullptr);
+  PeerConnectionDependencies callee_dependencies(nullptr);
+  auto null_factory = [](MediaType, const std::string&,
+                         TransformableFrameInterface::Direction)
+      -> scoped_refptr<FrameTransformerInterface> { return nullptr; };
+  if (GetParam() == 1) {
+    caller_dependencies.rtp_frame_transformer_factory = null_factory;
+  } else if (GetParam() == 2) {
+    callee_dependencies.rtp_frame_transformer_factory = null_factory;
+  }
+  ASSERT_TRUE(CreatePeerConnectionWrappersWithConfigAndDeps(
+      config, std::move(caller_dependencies), config,
+      std::move(callee_dependencies)));
+  ConnectFakeSignaling();
+  caller()->AddAudioVideoTracks();
+  caller()->CreateAndSetAndSignalOffer();
+  ASSERT_THAT(WaitUntil([&] { return SignalingStateStable(); }, IsTrue()),
+              IsRtcOk());
+  ASSERT_THAT(WaitUntil([&] { return DtlsConnected(); }, IsTrue()), IsRtcOk());
+  if (GetParam() == 0) {
+    MediaExpectations expectations;
+    expectations.CalleeExpectsSomeAudioAndVideo();
+    ASSERT_TRUE(ExpectNewFrames(expectations));
+  } else {
+    // Observe absolute counts, including any frame leaked during negotiation.
+    // Waiting for an undesired frame must time out, not succeed immediately.
+    EXPECT_THAT(
+        WaitUntil(
+            [&] {
+              return callee()->audio_frames_received() > 0 ||
+                     callee()->min_video_frames_received_per_track() > 0;
+            },
+            IsTrue(), {.timeout = TimeDelta::Seconds(2)}),
+        Not(IsRtcOk()));
+    EXPECT_EQ(callee()->audio_frames_received(), 0);
+    EXPECT_EQ(callee()->min_video_frames_received_per_track(), 0);
+  }
+}
+
+INSTANTIATE_TEST_SUITE_P(CreationTime, PeerConnectionCreationTransformerMediaTest,
+                         Values(0, 1, 2));
+
 // Test the OnFirstPacketReceived callback from audio/video RtpReceivers.  This
 // includes testing that the callback is invoked if an observer is connected
 // after the first packet has already been received.
