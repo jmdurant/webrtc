@@ -54,6 +54,7 @@ cp e2ee-experiment/tvos-device.args.gn out/tvos-creation-hook/args.gn
 buildtools/mac/gn gen out/mac-creation-tests
 buildtools/mac/gn gen out/tvos-creation-hook
 third_party/ninja/ninja -C out/mac-creation-tests -j 4 pc:peerconnection_unittests
+third_party/ninja/ninja -C out/mac-creation-tests -j 4 sdk:mac_framework_objc
 third_party/ninja/ninja -C out/tvos-creation-hook -j 4 sdk:framework_objc
 out/mac-creation-tests/peerconnection_unittests \
   --gtest_filter='*CreationTransformer*' \
@@ -81,3 +82,39 @@ supplied identity transformers) with initial versus active-transport setup.
 Active-transport cases check an open data channel, no prior RTP receivers, and
 new audio/video receivers sharing that same DTLS object after negotiation.
 The complete upstream suite was not run.
+
+## Objective-C regression and external cryptor checkpoint
+
+The macOS configuration now also exports Objective-C symbols, needed to link
+external test applications against `WebRTC.framework`. This does not change the
+creation-time callback's behavior. The macOS framework target is
+`sdk:mac_framework_objc`; the Apple device target is `sdk:framework_objc`.
+
+An allocated `NSString` containing `audio` or `video` exposed an existing
+pointer-comparison bug in `mediaTypeForKind:`. Commit `4da73f2` compares string
+contents. Its added XCTest exercises both sender and receiver capabilities for
+both media kinds using strings with different object identities. The actual
+upstream XCTest method passed locally (one test, zero failures):
+
+```sh
+python3 e2ee-experiment/run-factory-xctest.py
+```
+
+That script compiles the repository's XCTest source into a temporary macOS
+bundle; it does not substitute a mirrored implementation. It runs only the
+new method, not the full Apple test suite.
+
+Framework SHA-256 after the capability fix:
+
+- macOS: `ca91a6162da6e73ee7e212676aa4d267ca278b796ddacc811f927cdcd1104f9d`
+- tvOS: `46edd9f59f5428ed05d9e9eb7e02857c2f4104d96cf5946e06f98583487ac2f8`
+
+The separate TV review branch now contains an experimental Jitsi-compatible
+Apple cryptor/controller and browser fixture under
+`tvos-companion-rn/e2ee-harness/native/jitsi-m144`. The macOS native controller
+passes 11 direct-browser stages with simultaneous VP8 and Opus, using unchanged,
+hash-verified Jitsi Context code and external AES-128/index-zero keys. The same
+native fixture compiles and links for tvOS 17 arm64; it has not been installed.
+This is not JitsiConference/JVB, automatic key exchange, an M144 React Native
+bridge test, or physical-TV media validation. The cryptor remains outside this
+WebRTC fork and is not built into these framework binaries.

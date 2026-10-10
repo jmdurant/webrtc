@@ -5,6 +5,7 @@ is_debug = true
 is_component_build = false
 rtc_include_tests = true
 rtc_build_examples = false
+rtc_enable_objc_symbol_export = true
 use_remoteexec = false
 use_lld = true
 treat_warnings_as_errors = false

@@ -64,6 +64,14 @@ out/mac-creation-tests/peerconnection_unittests \
   --gtest_filter='*CreationTransformer*'
 ```
 
+The separate Jitsi-compatible Apple controller now links against the macOS
+framework and passes direct-browser VP8/Opus media tests with unchanged pinned
+Jitsi encryption code. An existing Objective-C capability lookup bug exposed
+by the controller is fixed separately in `4da73f2`, with one passing XCTest.
+See [the additional checkpoint](e2ee-experiment/README.md#objective-c-regression-and-external-cryptor-checkpoint)
+for scope, commands, and framework hashes. Full Jitsi lifecycle and physical-TV
+validation remain open.
+
 ## Before release or upstream submission
 
 1. Turn the local build checkpoint into a release-quality reproducible pipeline
