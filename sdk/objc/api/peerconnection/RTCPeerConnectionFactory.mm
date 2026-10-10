@@ -576,9 +576,9 @@ static webrtc::Environment CreateDefaultEnvironment() {
 #pragma mark - Private
 
 + (webrtc::MediaType)mediaTypeForKind:(NSString *)kind {
-  if (kind == RTC_CONSTANT_TYPE(RTCMediaStreamTrackKindAudio)) {
+  if ([kind isEqualToString:RTC_CONSTANT_TYPE(RTCMediaStreamTrackKindAudio)]) {
     return webrtc::MediaType::AUDIO;
-  } else if (kind == RTC_CONSTANT_TYPE(RTCMediaStreamTrackKindVideo)) {
+  } else if ([kind isEqualToString:RTC_CONSTANT_TYPE(RTCMediaStreamTrackKindVideo)]) {
     return webrtc::MediaType::VIDEO;
   } else {
     RTC_DCHECK_NOTREACHED();

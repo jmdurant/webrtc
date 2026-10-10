@@ -389,6 +389,25 @@
   }
 }
 
+- (void)testCapabilitiesWithNonconstantKindStrings {
+  RTC_OBJC_TYPE(RTCPeerConnectionFactory) *factory =
+      [[RTC_OBJC_TYPE(RTCPeerConnectionFactory) alloc] init];
+  for (NSString *kind in @[ RTC_CONSTANT_TYPE(RTCMediaStreamTrackKindAudio),
+                           RTC_CONSTANT_TYPE(RTCMediaStreamTrackKindVideo) ]) {
+    NSString *allocatedKind = [NSMutableString stringWithString:kind];
+    XCTAssertNotEqual(allocatedKind, kind);
+    XCTAssertEqualObjects(allocatedKind, kind);
+    RTC_OBJC_TYPE(RTCRtpCapabilities) *send =
+        [factory rtpSenderCapabilitiesForKind:allocatedKind];
+    RTC_OBJC_TYPE(RTCRtpCapabilities) *receive =
+        [factory rtpReceiverCapabilitiesForKind:allocatedKind];
+    XCTAssertGreaterThan(send.codecs.count, 0u);
+    XCTAssertGreaterThan(receive.codecs.count, 0u);
+    XCTAssertEqual(send.codecs.count, [factory rtpSenderCapabilitiesForKind:kind].codecs.count);
+    XCTAssertEqual(receive.codecs.count, [factory rtpReceiverCapabilitiesForKind:kind].codecs.count);
+  }
+}
+
 - (void)testSenderCapabilities {
   @autoreleasepool {
     RTC_OBJC_TYPE(RTCPeerConnectionFactory) * factory;
