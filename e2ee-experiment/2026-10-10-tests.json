@@ -1,0 +1,141 @@
+{
+  "tests": 10,
+  "failures": 0,
+  "disabled": 0,
+  "errors": 0,
+  "timestamp": "2026-10-10T00:32:51Z",
+  "time": "9.86s",
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "PeerConnectionFactoryTest",
+      "tests": 2,
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-10T00:32:51Z",
+      "time": "0.011s",
+      "testsuite": [
+        {
+          "name": "CreationTransformerFactoryRejectsPlanB",
+          "file": "..\/..\/pc\/peer_connection_factory_unittest.cc",
+          "line": 276,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-10T00:32:51Z",
+          "time": "0.003s",
+          "classname": "PeerConnectionFactoryTest"
+        },
+        {
+          "name": "CreationTransformerFactoryRunsForEveryAudioAndVideoEndpoint",
+          "file": "..\/..\/pc\/peer_connection_factory_unittest.cc",
+          "line": 296,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-10T00:32:51Z",
+          "time": "0.007s",
+          "classname": "PeerConnectionFactoryTest"
+        }
+      ]
+    },
+    {
+      "name": "CreationTime\/PeerConnectionCreationTransformerMediaTest",
+      "tests": 8,
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-10T00:32:51Z",
+      "time": "9.848s",
+      "testsuite": [
+        {
+          "name": "MediaFactoryOnCreation\/0",
+          "value_param": "(0, false)",
+          "file": "..\/..\/pc\/peer_connection_integrationtest.cc",
+          "line": 228,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-10T00:32:51Z",
+          "time": "0.45s",
+          "classname": "CreationTime\/PeerConnectionCreationTransformerMediaTest"
+        },
+        {
+          "name": "MediaFactoryOnCreation\/1",
+          "value_param": "(0, true)",
+          "file": "..\/..\/pc\/peer_connection_integrationtest.cc",
+          "line": 228,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-10T00:32:52Z",
+          "time": "0.368s",
+          "classname": "CreationTime\/PeerConnectionCreationTransformerMediaTest"
+        },
+        {
+          "name": "MediaFactoryOnCreation\/2",
+          "value_param": "(1, false)",
+          "file": "..\/..\/pc\/peer_connection_integrationtest.cc",
+          "line": 228,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-10T00:32:52Z",
+          "time": "2.04s",
+          "classname": "CreationTime\/PeerConnectionCreationTransformerMediaTest"
+        },
+        {
+          "name": "MediaFactoryOnCreation\/3",
+          "value_param": "(1, true)",
+          "file": "..\/..\/pc\/peer_connection_integrationtest.cc",
+          "line": 228,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-10T00:32:54Z",
+          "time": "2.066s",
+          "classname": "CreationTime\/PeerConnectionCreationTransformerMediaTest"
+        },
+        {
+          "name": "MediaFactoryOnCreation\/4",
+          "value_param": "(2, false)",
+          "file": "..\/..\/pc\/peer_connection_integrationtest.cc",
+          "line": 228,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-10T00:32:56Z",
+          "time": "2.045s",
+          "classname": "CreationTime\/PeerConnectionCreationTransformerMediaTest"
+        },
+        {
+          "name": "MediaFactoryOnCreation\/5",
+          "value_param": "(2, true)",
+          "file": "..\/..\/pc\/peer_connection_integrationtest.cc",
+          "line": 228,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-10T00:32:58Z",
+          "time": "2.05s",
+          "classname": "CreationTime\/PeerConnectionCreationTransformerMediaTest"
+        },
+        {
+          "name": "MediaFactoryOnCreation\/6",
+          "value_param": "(3, false)",
+          "file": "..\/..\/pc\/peer_connection_integrationtest.cc",
+          "line": 228,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-10T00:33:01Z",
+          "time": "0.455s",
+          "classname": "CreationTime\/PeerConnectionCreationTransformerMediaTest"
+        },
+        {
+          "name": "MediaFactoryOnCreation\/7",
+          "value_param": "(3, true)",
+          "file": "..\/..\/pc\/peer_connection_integrationtest.cc",
+          "line": 228,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-10T00:33:01Z",
+          "time": "0.372s",
+          "classname": "CreationTime\/PeerConnectionCreationTransformerMediaTest"
+        }
+      ]
+    }
+  ]
+}

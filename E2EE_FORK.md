@@ -40,15 +40,24 @@ plaintext and synthetic encryption probes. Missing/wrong keys and disabled
 cryptors blocked the expected frames; restoring matching keys/enabled cryptors
 restored reception. Those probes do **not** validate this source patch.
 
-The creation-time hook and its tests have not completed compilation or execution.
-Local macOS and tvOS builds encountered Xcode 27 SDK / bundled libc++ header
-compatibility errors. With Clang modules and custom libc++ disabled, both builds
-advanced beyond those errors, then were intentionally interrupted. No patched
-framework has been installed, and no release artifact is published here.
+The creation-time hook now builds as an arm64 tvOS framework and macOS test
+executable. Disabling Clang modules/custom libc++ and using bundled LLD resolved
+the Xcode 27 SDK/header/linker compatibility errors. The local configurations,
+toolchain details, and unsigned framework hash are in
+[e2ee-experiment](e2ee-experiment/README.md). No patched framework has been
+installed, and no release artifact is published here.
 
-Draft tests cover Plan B rejection, per-endpoint callback invocation, ordinary
-initial media, and dropping initial media when either peer's factory returns
-null. Once `pc:peerconnection_unittests` builds, run:
+All 10 targeted native tests pass. They cover Plan B rejection, per-endpoint
+callback invocation, ordinary media, null-factory frame dropping, and supplied
+identity transformers. Media tests exercise both initial negotiation and adding
+audio/video after a data channel is open. They assert that new receivers reuse
+the already-connected DTLS transport. In the null-factory cases, absolute
+received frame counts remain zero through negotiation and a two-second
+observation window. Identity controls prove frames traverse all four
+audio/video sender/receiver transform paths. These are attachment/media tests,
+not cryptographic or full test-suite results.
+
+Run the targeted suite with:
 
 ```sh
 out/mac-creation-tests/peerconnection_unittests \
@@ -57,10 +66,10 @@ out/mac-creation-tests/peerconnection_unittests \
 
 ## Before release or upstream submission
 
-1. Complete native macOS test and tvOS framework builds; record the full toolchain
-   and dependency revisions and provide a verified reproducible build recipe.
-2. Run the draft tests, then add coverage for provided transformers and receiver
-   creation during renegotiation on an already-active transport.
+1. Turn the local build checkpoint into a release-quality reproducible pipeline
+   with correct metadata, ABI/prefixes, required slices, and artifact validation.
+2. Extend attachment coverage to further renegotiation, replacement, teardown,
+   and failure cases, and review the synchronous factory API for upstream use.
 3. Validate key installation, revocation, replacement, close, and recovery with
    actual cryptors; prove no unencrypted media escapes during transitions.
 4. Integrate the React Native bridge and Jitsi lifecycle separately, including
