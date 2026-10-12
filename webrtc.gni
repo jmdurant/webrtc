@@ -246,6 +246,10 @@ declare_args() {
   # See the definition of RTC_OBJC_TYPE_PREFIX in the code.
   rtc_objc_prefix = ""
 
+  # Objective-C exported constants use a separate prefix (for example kLK).
+  # Preserve the existing k prefix unless an embedder explicitly changes it.
+  rtc_objc_constant_prefix = "k"
+
   # Embedders can define dependencies needed by WebRTC. Dependencies can be
   # configs or targets. This can be defined in their `.gn` file.
   #

@@ -148,6 +148,9 @@ config("common_inherited_config") {
   if (rtc_objc_prefix != "") {
     defines += [ "RTC_OBJC_TYPE_PREFIX=${rtc_objc_prefix}" ]
   }
+  if (rtc_objc_constant_prefix != "k") {
+    defines += [ "RTC_CONSTANT_TYPE_PREFIX=${rtc_objc_constant_prefix}" ]
+  }
 
   if (rtc_dlog_always_on) {
     defines += [ "DLOG_ALWAYS_ON" ]
